@@ -48,6 +48,11 @@
                  88 WS-SUB-FUNC-UPDATE   VALUE 4.
               07 WS-SUB-ID            PIC 9(05).
               07 WS-SUB-RC            PIC 9(02).
+              07 WS-SUB-NAME          PIC X(15).
+              07 WS-SUB-SURNAME       PIC X(15).
+              07 WS-SUB-EXC           PIC S9(03).
+              07 WS-SUB-DATE          PIC S9(07).
+              07 WS-SUB-BALANCE       PIC S9(15).
               07 WS-SUB-DESC          PIC X(119).
       *****************************************************************
        PROCEDURE DIVISION USING WS-SUB-AREA.
@@ -93,15 +98,21 @@
        H300-END. EXIT.
 
        H310-READ.
+              MOVE IDX-EXC TO WS-SUB-EXC.
+              MOVE IDX-NAME TO WS-SUB-NAME.
+              MOVE IDX-SURNAME TO WS-SUB-SURNAME.
+              MOVE IDX-DATE TO WS-SUB-DATE.
+              MOVE IDX-BALANCE TO WS-SUB-BALANCE.
+              MOVE IDX-ID TO WS-SUB-ID.
               PERFORM H700-NOT-INVALID.
        H310-END. EXIT.
 
        H320-WRITE.
-            MOVE 948 TO  IDX-EXC.
-            MOVE "Yunus Emre     " TO IDX-NAME.
-            MOVE "Akdik          " TO IDX-SURNAME.
-            MOVE 19980409 TO IDX-DATE.
-            MOVE ZEROS TO IDX-BALANCE.
+            MOVE WS-SUB-EXC TO  IDX-EXC.
+            MOVE WS-SUB-NAME TO IDX-NAME.
+            MOVE WS-SUB-SURNAME TO IDX-SURNAME.
+            MOVE WS-SUB-DATE TO IDX-DATE.
+            MOVE WS-SUB-BALANCE TO IDX-BALANCE.
             MOVE WS-SUB-ID TO IDX-ID.
             WRITE IDX-REC.
             PERFORM H700-NOT-INVALID.
@@ -156,7 +167,7 @@
               MOVE "-updt-rc:" TO WS-DESC-1
               MOVE FUNCTION TRIM(WS-FNAME-TO) TO WS-FNAME-TO
               STRING "KAYIT GUNCELLENDI." DELIMITED BY SIZE
-                     FUNCTION TRIM(WS-FNAME-FROM TRAILING) 
+                     FUNCTION TRIM(WS-FNAME-FROM TRAILING)
                      DELIMITED BY SIZE
                      " " DELIMITED BY SIZE
                      FUNCTION TRIM(WS-LNAME-FROM TRAILING)
@@ -165,7 +176,7 @@
                      FUNCTION TRIM(WS-FNAME-TO TRAILING)
                      DELIMITED BY SIZE
                      " " DELIMITED BY SIZE
-                     FUNCTION TRIM(WS-LNAME-TO TRAILING) 
+                     FUNCTION TRIM(WS-LNAME-TO TRAILING)
                      DELIMITED BY SIZE
                      INTO WS-DESC-2
            END-IF.
@@ -200,8 +211,8 @@
                   '-' DELIMITED BY SIZE
                   WS-DESC-2 DELIMITED BY SIZE
                   INTO WS-SUB-DESC.
-       H810-END. EXIT.     
-           
+       H810-END. EXIT.
+
        H900-TERMINATE.
            CLOSE IDX-FILE.
            GOBACK.

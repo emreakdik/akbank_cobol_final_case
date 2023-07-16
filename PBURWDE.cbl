@@ -33,13 +33,18 @@
            05 WS-OPERATION-TYPE    PIC 9(01).
               88 VALID-OPT               VALUE 1 THRU 4.
            05 WS-SUB-AREA.
-              07 WS-SUB-FUNC       PIC 9(01).
+              07 WS-SUB-FUNC          PIC 9(01).
                  88 WS-SUB-FUNC-READ     VALUE 1.
                  88 WS-SUB-FUNC-WRITE    VALUE 2.
                  88 WS-SUB-FUNC-DELETE   VALUE 3.
                  88 WS-SUB-FUNC-UPDATE   VALUE 4.
               07 WS-SUB-ID            PIC 9(05).
               07 WS-SUB-RC            PIC 9(02).
+              07 WS-SUB-NAME          PIC X(15).
+              07 WS-SUB-SURNAME       PIC X(15).
+              07 WS-SUB-EXC           PIC S9(03).
+              07 WS-SUB-DATE          PIC S9(07).
+              07 WS-SUB-BALANCE       PIC S9(15).
               07 WS-SUB-DESC          PIC X(119).
       *****************************************************************
        PROCEDURE DIVISION.
@@ -70,6 +75,18 @@
        H200-PROCESS.
            PERFORM H210-CHECK-OPERATION-TYPE.
            IF VALID-OPT
+              IF WS-SUB-FUNC-WRITE
+                   MOVE "Yunus Emre     " TO WS-SUB-NAME
+                   MOVE "Akdik          " TO WS-SUB-SURNAME
+                   MOVE 948 TO WS-SUB-EXC
+                   MOVE 20191231 TO WS-SUB-DATE
+               ELSE IF WS-SUB-FUNC-READ
+                   MOVE SPACES TO WS-SUB-NAME
+                   MOVE SPACES TO WS-SUB-SURNAME
+                   MOVE ZEROES TO WS-SUB-EXC
+                   MOVE ZEROES TO WS-SUB-DATE
+              END-IF
+              MOVE ZEROES TO WS-SUB-BALANCE
               MOVE INP-ID TO WS-SUB-ID
               MOVE SPACES TO WS-SUB-DESC
               MOVE ZEROS  TO WS-SUB-RC
